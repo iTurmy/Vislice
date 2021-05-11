@@ -1,2 +1,2 @@
 # Vislice
-Vislice
+vISLICE

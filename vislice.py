@@ -1,39 +1,48 @@
 import bottle
 import model
 
-SKRIVNOST = "DanesJeLepDan"
-DATOTEKA_S_STANJEM = "stanje.json"
-DATOTEKA_Z_BESEDAMI = "besede.txt"
+SKRIVNOST = 'moja_prva_skrivnost'
+DATOTEKA_S_STANJEM = 'stanje.json'
+DATOTEKA_Z_BESEDAMI = 'besede.txt'
 
 vislice = model.Vislice(DATOTEKA_S_STANJEM, DATOTEKA_Z_BESEDAMI)
 vislice.nalozi_igre_iz_datoteke()
 
 
-@bottle.get("/")
-def osnovna_stran():
+@bottle.get('/')
+def index():
     return bottle.template('index.tpl')
 
-@bottle.post("/nova_igra/")
+
+@bottle.post('/nova_igra/')
 def nova_igra():
     id_igre = vislice.nova_igra()
-    bottle.response.set_cookie('idigre', id_igre, secret=SKRIVNOST, path='/')
-    bottle.redirect("/igra/")
+    bottle.response.set_cookie('idigre', 'idigre{}'.format(id_igre), secret=SKRIVNOST, path='/')
+    bottle.redirect('/igra/')
 
-@bottle.get("/igra/")
+
+@bottle.get('/igra/')
 def pokazi_igro():
-    id_igre = bottle.request.get_cookie('idigre', secret=SKRIVNOST)
-    (igra, stanje) = vislice.igre[id_igre]
-    return bottle.template("igra.tpl",
-                           id_igre=id_igre,
+    id_igre = int(bottle.request.get_cookie('idigre', secret=SKRIVNOST).split('e')[1])
+    igra, poskus = vislice.igre[id_igre]
+    return bottle.template('igra.tpl',
                            igra=igra,
-                           poskus=stanje)
+                           poskus=poskus)
 
-@bottle.post("/igra/")
+
+@bottle.post('/igra/')
 def ugibaj():
-    id_igre = bottle.request.get_cookie('idigre', secret=SKRIVNOST)
-    crka = bottle.request.forms.getunicode("crka")
+    id_igre = int(bottle.request.get_cookie('idigre', secret=SKRIVNOST).split('e')[1])
+    crka = bottle.request.forms.getunicode('crka')
     vislice.ugibaj(id_igre, crka)
-    bottle.redirect("/igra/")
+    bottle.redirect('/igra/')
+
+
+@bottle.get('/statistika/')
+def pokazi_statistiko():
+    slovar_statistik = model.statistika(DATOTEKA_S_STANJEM)
+    return bottle.template('statistika.tpl',
+                           slovar_statistik=slovar_statistik)
 
 
 @bottle.get('/img/<picture>')
@@ -42,7 +51,3 @@ def serve_pictures(picture):
 
 
 bottle.run(reloader=True, debug=True)
-
-# "files.associations": {
-#         "*.tpl": "html",..
-#     },

@@ -1,43 +1,46 @@
 % import model
-% rebase('base.tpl', title='Igra')
+%rebase('base.tpl', title='Vislice')
 
 <table>
-    <tr>
-        <td>{{igra.pravilni_del_gesla()}}</td>
-    </tr>
-    <tr>
-        <td>Nepravilne črke: </td>
-        <td>{{igra.nepravilni_ugibi()}} </td>
-   </tr>
-   <tr>
-       <td><img src="/img/{{igra.stevilo_napak()}}.jpg" alt="obesanje"></td>
-   </tr>
+<tr>
+    <td>
+        <h2>{{igra.pravilni_del_gesla()}}</h2>
+    </td>
+</tr>
+<tr>
+    <td>
+        <br> Nepravilni ugibi : {{igra.nepravilni_ugibi()}}
+    </td>
+</tr>
+<tr>
+    <td>
+        <img src="../img/{{igra.stevilo_napak()}}.jpg" alt="obesanje">
+    </td>
+</tr>
 </table>
 
-% if poskus == model.ZMAGA :
+% if poskus == model.ZMAGA:
 
-<h1>Zmaga!</h1>
-
-Uganili ste pravilno geslo. Čestitke!
+<h1>ZMAGA!</h1>
 
 <form action="/nova_igra/" method="post">
     <button type="submit">Nova igra</button>
 </form>
 
-% elif poskus == model.PORAZ :
+% elif poskus == model.PORAZ:
 
-<h2>Izgubili ste!</h2>
+<h1>SMRT!</h1>
 
-Pravilno geslo je: {{igra.geslo}}
+Pravilno geslo: {{igra.geslo}}
 
 <form action="/nova_igra/" method="post">
     <button type="submit">Nova igra</button>
 </form>
 
 % else:
-<form action="/igra/" method="post">
-    <input type="text" name="crka" autofocus>
-    <button type="submit">Ugibaj!</button>
-</form>
 
+<form action="/igra/" method="post">
+    Črka: <input type="text" name="crka" autofocus>
+    <button type="submit">Pošlji ugib</button>
+</form>
 % end

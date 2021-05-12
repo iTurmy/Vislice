@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vislice</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-  </head>
 <html>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <meta name="viewport" content="width-device-width, initial-scale=1.0"/>
+    </head>
 
 <body>
-    <div class="container">
-        <section>
-            {{!base}}
-        </section>
-    </div>
+
+  <h1>Vislice</h1>
+
+  <blockquote>
+    Vislice so najboljša igra za preganjanje dolgčasa (poleg tetrisa).
+    <small>Študentje</small>
+  </blockquote>
+
+  <div class="container">
+      {{!base}}
+  </div>
+
 </body>
 
 </html>

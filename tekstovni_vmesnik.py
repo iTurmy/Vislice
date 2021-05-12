@@ -1,81 +1,80 @@
 import model
 
 
-PONOVNI_ZAGON = "p"
-IZHOD = "i"
-
-
 def izpis_igre(igra):
-    poskusi = model.STEVILO_DOVOLJENIH_NAPAK + 1 - igra.stevilo_napak()
-    tekst = f"""######################################\n
-    {igra.pravilni_del_gesla()}\n
-    Število poskusov: {poskusi}\n
-    Nepravilne črke: {igra.nepravilni_ugibi()}
-######################################\n"""
+    tekst = (
+        '================================================\n\n'
+        'Število preostalih poskusov: {stevilo_preostalih_poskusov} \n\n'
+        '       {pravilni_del_gesla}\n\n'
+        'Neuspeli poskusi: {neuspeli_poskusi}\n\n'
+        '================================================'
+    ).format(
+        stevilo_preostalih_poskusov=model.STEVILO_DOVOLJENIH_NAPAK - igra.stevilo_napak() + 1,
+        pravilni_del_gesla=igra.pravilni_del_gesla(),
+        neuspeli_poskusi=igra.nepravilni_ugibi()
+    )
     return tekst
 
 
 def izpis_zmage(igra):
-    tekst = f"""######################################\n
-    Bravo! Zmagali ste!\n
-    Uganili ste geslo: {igra.pravilni_del_gesla()}\n
-######################################\n"""
+    tekst = (
+        '\n######## Wipiiiii, zmaga! Geslo je bilo: {geslo} ########\n\n'
+    ).format(
+        geslo=igra.geslo
+    )
     return tekst
 
 
 def izpis_poraza(igra):
-    tekst = f"""######################################\n
-    Porabili ste vse poskuse.\n
-    Pravilno geslo: {igra.geslo}\n
-######################################\n"""
+    tekst = (
+        '\n######## Boooo, poraz! Geslo je bilo: {geslo} ########\n\n'
+    ).format(
+        geslo=igra.geslo
+    )
     return tekst
+
+
+def izpis_napake():
+    return '\n######## Ugiba se ena črka naenkrat! ########\n\n'
+
+
+def izpis_napake_znak():
+    return '\n######## Ugib naj ne vsebuje posebnih znakov! ########\n\n'
 
 
 def zahtevaj_vnos():
-    return input('Vnesite črko:')
-
-
-def zahtevaj_moznost():
-    return input('Vnesite možnost:')
-
-
-def ponudi_moznosti():
-    tekst = f""" Vpišite črko za izbor naslednjih možnosti:\n
-    {PONOVNI_ZAGON} : ponovni zagon igre\n
-    {IZHOD} : izhod\n
-    """
-    return tekst
-
-
-def izberi_ponovitev():
-    print(ponudi_moznosti())
-    moznost = zahtevaj_moznost().strip().lower()
-    if moznost == PONOVNI_ZAGON:
-        igra = model.nova_igra()
-        print(izpis_igre(igra))
-        return igra
-    else:
-        return IZHOD
+    return input('Črka: ')
 
 
 def pozeni_vmesnik():
+
     igra = model.nova_igra()
-    print(izpis_igre(igra))
+
     while True:
-        crka = zahtevaj_vnos()
-        odziv = igra.ugibaj(crka)
-        if odziv == model.ZMAGA:
+        # najprej izpisemo stanje, da vidimo, koliko črk je ipd.
+        print(izpis_igre(igra))
+        # čakamo na črko od uporabnika
+        poskus = zahtevaj_vnos()
+        rezultat_ugiba = igra.ugibaj(poskus)
+        if rezultat_ugiba == model.VEC_KOT_CRKA:
+            print(izpis_napake())
+        elif rezultat_ugiba == model.POSEBEN_ZNAK:
+            print(izpis_napake_znak())
+        elif rezultat_ugiba == model.ZMAGA:
             print(izpis_zmage(igra))
-            igra = izberi_ponovitev()
-            if igra == IZHOD:
+            ponvni_zagon = input("Za ponovni zagon vpišite 1.").strip()
+            if ponvni_zagon == "1":
+                igra = model.nova_igra()
+            else:
                 break
-        elif odziv == model.PORAZ:
+        elif rezultat_ugiba == model.PORAZ:
             print(izpis_poraza(igra))
-            igra = izberi_ponovitev()
-            if igra == IZHOD:
+            ponvni_zagon = input("Za ponovni zagon vpišite 1.\n").strip()
+            if ponvni_zagon == "1":
+                igra = model.nova_igra()
+            else:
                 break
-        else:
-            print(izpis_igre(igra))
 
 
+# Zaženi igro:
 pozeni_vmesnik()

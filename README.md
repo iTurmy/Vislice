@@ -1,5 +1,9 @@
 # Vislice
-Program za igranje vislic pri predmetu Uvod v programiranje.
 
-# Avtor
-Avtor tega repozitorija je Nejc Košmrl.
+## Avtorji
+
+Nejc Košmrl
+
+## Opis
+
+V tem projektu se lahko igramo igro vislice.
